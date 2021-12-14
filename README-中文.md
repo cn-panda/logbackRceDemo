@@ -45,6 +45,8 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 在这里，我故意的写了一个存在任意文件上传的漏洞环境，然后借助 loghack 配置文件中的`scan`属性，配合logback漏洞，实现 RCE
 
+**注意：这里的 upload 是我故意编写的存在文件上传漏洞的代码，是为了提出一种可能的场景提出来的，并不是 logback 本身的问题，logback 只是需要这个漏洞才能够触发 RCE，如果在不借助其他漏洞的情况下，logback 本身是安全**
+
 # 漏洞分析
 
 ## JNDIConnectionSource
