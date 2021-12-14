@@ -89,7 +89,7 @@
 
    Then create a configuration file of `logback-spring.xml` locally, the content of the file is as follows:
 
-   ```xml
+```
 <configuration scan="true" scanPeriod="10 seconds" debug="true">  
    　　　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">  
        　　　　　 <encoder>  
@@ -101,11 +101,12 @@
                <jndiLocation>ldap://127.0.0.1:1389/erqtcd</jndiLocation>  
            </connectionSource>  
        </appender>  
+     
        　　　<root level="DEBUG">  
        　　　　　　<appender-ref ref="STDOUT" />  
        　　　</root>  
-   </configuration>
-   ```
+</configuration>
+```
    
    Then visit `http://localhost:8080/upload.html`, select the file and click the upload button, use BurpSuite to capture the package, you can see that the file is uploaded successfully:
 
