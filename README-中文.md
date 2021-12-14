@@ -146,6 +146,10 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 ![[../image/Pasted image 20211214171037.png]]
 
+实际上，除了这两个外，`JMXConfiguratorAction`中的`begin`同样可以进行恶意利用
+
+![[../image/Pasted image 20211214175452.png]]
+
 # 总结
 
 总的来说，这个漏洞的触发方式还是比较困难的，除非能够满足以下条件：
