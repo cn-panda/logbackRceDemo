@@ -46,6 +46,8 @@
    If the configuration file is detected to change, it will update and load the configuration file in real time.
 
    In this project, I deliberately wrote a vulnerability environment with arbitrary file uploads, and then used the `scan` attribute in the loghack configuration file to cooperate with the logback vulnerability to implement RCE
+   
+   **Note: the upload here is the code with file upload vulnerability deliberately written by the author to propose a possible scenario. It is not the problem of logback itself. Logback only needs this vulnerability to trigger rce. If other vulnerabilities are not used, logback itself is safe**
 
    # Vulnerability analysis
 
