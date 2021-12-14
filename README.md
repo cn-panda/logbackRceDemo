@@ -1,4 +1,13 @@
-1. ##  Affected version
+   # TL;DR
+
+   In general, the triggering method of the vulnerability described in the following is relatively difficult, unless the following conditions can be met:
+
+   1. The configuration file of logback can be modified or overwritten
+   2. Able to make the modified configuration file take effect
+
+   # Summary
+
+   ##  Affected version
 
    logback-classic <=1.2.7
 
@@ -11,7 +20,8 @@
    ##  Project address
 
    https://github.com/cn-panda/logbackRceDemo
-
+   
+   
    The project is a simple vulnerability demo environment  in springboot, The key function is **upload**:
 
    ```java
@@ -159,9 +169,3 @@
 
    ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/11.png?raw=true)
 
-   # Summarize
-
-   In general, the triggering method of this vulnerability is still relatively difficult, unless the following conditions can be met:
-
-   1. The configuration file of logback can be modified or overwritten
-2. Able to make the modified configuration file take effect
