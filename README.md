@@ -101,7 +101,6 @@
                <jndiLocation>ldap://127.0.0.1:1389/erqtcd</jndiLocation>  
            </connectionSource>  
        </appender>  
-     
        　　　<root level="DEBUG">  
        　　　　　　<appender-ref ref="STDOUT" />  
        　　　</root>  
