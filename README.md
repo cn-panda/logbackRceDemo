@@ -89,7 +89,7 @@
 
    Then create a configuration file of `logback-spring.xml` locally, the content of the file is as follows:
 
-   ```
+   ```xml
 <configuration scan="true" scanPeriod="10 seconds" debug="true">  
    　　　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">  
        　　　　　 <encoder>  
