@@ -39,7 +39,7 @@
 
    The configuration file of logback in the project is as follows:
 
-   ![[../image/Pasted image 20211214164218.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/1.png?raw=true)
 
    The key point is the `scan` attribute, which is used by logback to periodically scan the configuration file for changes.
 
@@ -50,8 +50,6 @@
    # Vulnerability analysis
 
    ## JNDIConnectionSource
-
-   在 logback 中同样类似于log4j1.x 中  JDBCAppender 的 Appender —— **DBAppender**，DBAppender 中有一个名为`ConnectionSource`的接口
 
    In logback, it is also similar to the Appender of JDBCAppender in log4j1.x —— that is **DBAppender**
 
@@ -69,30 +67,30 @@
 
    In fact, you can find out by observing the code of the `getConnection` method in `JNDIConnectionSource.java`:
 
-   ![[../image/Pasted image 20211214155414.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/2.png?raw=true)
 
    If dataSource is empty, then let `dataSource = lookupDataSource();`
 
    Then trigger `lookup` in **lookupDataSource()**:
 
-   ![[../image/Pasted image 20211214155302.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/3.png?raw=true)
 
    #### Vulnerability recurrence
 
    First download the reproduced source code, and then run the main function of the `RceDemoApplication` project:
 
-   ![[../image/Pasted image 20211214160245.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/4.png?raw=true)
 
    Then open the browser and type in the address bar: `http://localhost:8080`, you can visit the project homepage
 
-   ![[../image/Pasted image 20211214160704.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/5.png?raw=true)
 
    This means that your vulnerability environment has been built.
 
    Then create a configuration file of `logback-spring.xml` locally, the content of the file is as follows:
 
    ```
-   <configuration scan="true" scanPeriod="10 seconds" debug="true">  
+<configuration scan="true" scanPeriod="10 seconds" debug="true">  
    　　　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">  
        　　　　　 <encoder>  
        　　　　　　　　　<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>  
@@ -109,14 +107,14 @@
        　　　</root>  
    </configuration>
    ```
-
+   
    Then visit `http://localhost:8080/upload.html`, select the file and click the upload button, use BurpSuite to capture the package, you can see that the file is uploaded successfully:
 
-   ![[../image/Pasted image 20211214163728.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/6.png?raw=true)
 
    After waiting ten seconds, RCE can be executed successfully
 
-   ![[../image/Pasted image 20211214164425.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/7.png?raw=true)
 
    ## insertFromJNDI
 
@@ -126,14 +124,14 @@
 
    When the `<insertFromJNDI>` tag is used, it means that the `begin` method in the `InsertFromJNDIAction.java` file will be called, and the `JNDIUtil.lookup` method will be used , thereby triggering the vulnerability:
 
-   ![[../image/Pasted image 20211214170343.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/8.png?raw=true)
 
    ### Vulnerability recurrence
 
    The reproduction steps are roughly the same as in #JNDIConnectionSource, except that the payload used in the uploaded file needs to be changed, as follows:
 
    ```
-   <configuration scan="true" scanPeriod="10 seconds" debug="true">
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
    　　　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
        　　　　　 <encoder>
        　　　　　　　　　<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
@@ -146,22 +144,22 @@
        　　　</root>
    </configuration>
    ```
-
+   
    Upload the configuration file:
 
-   ![[../image/Pasted image 20211214170840.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/9.png?raw=true)
 
    Similarly, after waiting for 10 seconds, RCE can be triggered:
 
-   ![[../image/Pasted image 20211214171037.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/10.png?raw=true)
 
    In fact, in addition to these two, the `begin` in `JMXConfiguratorAction` can also be used for malicious purposes.
 
-   ![[../image/Pasted image 20211214175452.png]]
+   ![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/11.png?raw=true)
 
    # Summarize
 
    In general, the triggering method of this vulnerability is still relatively difficult, unless the following conditions can be met:
 
    1. The configuration file of logback can be modified or overwritten
-   2. Able to make the modified configuration file take effect
+2. Able to make the modified configuration file take effect

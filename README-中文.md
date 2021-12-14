@@ -39,7 +39,7 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 项目中 logback 的配置文件如下：
 
-![[../image/Pasted image 20211214164218.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/1.png?raw=true)
 
 关键点在于`scan`属性，该属性是 logback 用于定时扫描配置文件的变化，若检测到配置文件发生改变，则实时更新加载配置文件
 
@@ -62,23 +62,23 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 实际上可以通过观察`JNDIConnectionSource.java`中`getConnection`方法的代码可以发现：
 
-![[../image/Pasted image 20211214155414.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/2.png?raw=true)
 
 如果dataSource 为空，那么就令`dataSource = lookupDataSource();`
 
 然后在**lookupDataSource()** 中触发 `lookup`:
 
-![[../image/Pasted image 20211214155302.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/3.png?raw=true)
 
 #### 漏洞复现
 
 首先下载复现源码，然后运行`RceDemoApplication`项目的main 函数：
 
-![[../image/Pasted image 20211214160245.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/4.png?raw=true)
 
 然后打开浏览器，在地址栏中输入：`http://localhost:8080` 即可访问项目首页
 
-![[../image/Pasted image 20211214160704.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/5.png?raw=true)
 
 然后在本地创建一个`logback-spring.xml`的配置文件，文件内容如下：
 
@@ -103,11 +103,11 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 然后再访问`http://localhost:8080/upload.html`，选择该文件后点击上传按钮，抓包可以看到文件上传成功：
 
-![[../image/Pasted image 20211214163728.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/6.png?raw=true)
 
 等待十秒钟后，即可成功执行 RCE
 
-![[../image/Pasted image 20211214164425.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/7.png?raw=true)
 
 ## insertFromJNDI
 
@@ -117,7 +117,7 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 当使用`<insertFromJNDI>` 标签的时候，意味着会调用`InsertFromJNDIAction.java`文件中的`begin`方法，在该方法中会使用`JNDIUtil.lookup` 方法，从而触发漏洞：
 
-![[../image/Pasted image 20211214170343.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/8.png?raw=true)
 
 ### 漏洞复现
 
@@ -140,15 +140,15 @@ public String upload(@RequestParam("file") MultipartFile file) {
 
 上传该配置文件：
 
-![[../image/Pasted image 20211214170840.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/9.png?raw=true)
 
 同样的，等待 10 秒后，即可触发 RCE：
 
-![[../image/Pasted image 20211214171037.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/10.png?raw=true)
 
 实际上，除了这两个外，`JMXConfiguratorAction`中的`begin`同样可以进行恶意利用
 
-![[../image/Pasted image 20211214175452.png]]
+![1.png](https://github.com/cn-panda/logbackRceDemo/blob/main/img/11.png?raw=true)
 
 # 总结
 
